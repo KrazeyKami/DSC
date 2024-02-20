@@ -3,6 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
 
+    "avd_workbook_name": {
+            "defaultValue": "10a032a6-8265-4315-8190-63ee503646ce", // "[newGuid()]",
+            "type": "String"
+    },
 
     "AVDStartCounter":{
         "defaultValue": 1,
@@ -11,8 +15,13 @@
             "description": "This is the first AVD count suffix (e.g. '1' means start at AVDHOST-1, '10' means start at AVDHOST-10, etc)."
         }
       },
-
-
+    "dataCollectionRuleId": {
+        "defaultValue":  "[concat('/subscriptions/',parameters('subscriptionId'), '/resourceGroups/', parameters('ResourceGroupNameAVD'), '/providers/Microsoft.Insights/datacollectionrules/', parameters('avd_workbook_name'),'-dcr')]",
+        "type": "string",
+        "metadata": {
+            "description": "The datacollection rule ID for Azure VM Insights."
+        }
+    },
 	  "credentials_hybridAdmin": {
         "defaultValue": "",
         "type": "securestring",
@@ -969,22 +978,39 @@
           "name": "AMA-install-loop",
           "count": "[parameters('rdshNumberOfInstances')]"
         },
-      "properties": {
-        "publisher": "Microsoft.Azure.Monitor",
-        "type": "AzureMonitorWindowsAgent",
-        "typeHandlerVersion": "1.0",
-        "settings": {
-          "authentication": {
-            "managedIdentity": {
-              "identifier-name": "mi_res_id",
-              "identifier-value": "[parameters('userAssignedIdentityID')]"
+        "properties": {
+          "publisher": "Microsoft.Azure.Monitor",
+          "type": "AzureMonitorWindowsAgent",
+          "typeHandlerVersion": "1.0",
+          "settings": {
+            "authentication": {
+              "managedIdentity": {
+                "identifier-name": "mi_res_id",
+                "identifier-value": "[parameters('userAssignedIdentityID')]"
+              }
             }
-          }
+          },
+          "autoUpgradeMinorVersion": true,
+          "enableAutomaticUpgrade": true
+        }
+      },
+      {
+            
+        "type": "Microsoft.Insights/dataCollectionRuleAssociations",
+        "apiVersion": "2021-09-01-preview",
+        "name": "AzureMonitorDataCollectionRuleAssociations",
+        "copy": {
+          "name": "DCR-associate-loop",
+          "count": "[parameters('rdshNumberOfInstances')]"
         },
-        "autoUpgradeMinorVersion": true,
-        "enableAutomaticUpgrade": true
+        //"scope": "[format('Microsoft.Compute/virtualMachines/{0}', concat(parameters('rdshNamePrefix'), parameters('vmNumber')))]",
+        "properties": {
+            "description": "Association of data collection rule. Deleting this association will break the data collection for this virtual machine.",
+            "dataCollectionRuleId": "[parameters('dataCollectionRuleId')]"
+        },
+        "dependsOn": [
+          "AMA-install-loop"]            
       }
-    }
     ],
     "outputs": {}
   }
