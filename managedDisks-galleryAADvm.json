@@ -999,11 +999,11 @@
         "type": "Microsoft.Insights/dataCollectionRuleAssociations",
         "apiVersion": "2021-09-01-preview",
         "name": "AzureMonitorDataCollectionRuleAssociations",
-        "copy": {
+        /*"copy": {
           "name": "DCR-associate-loop",
           "count": "[parameters('rdshNumberOfInstances')]"
-        },
-        //"scope": "[format('Microsoft.Compute/virtualMachines/{0}', concat(parameters('rdshNamePrefix'), parameters('vmNumber')))]",
+        },*/
+        "scope": "[format('Microsoft.Compute/virtualMachines/{0}', concat(parameters('rdshPrefix'), add(copyindex(parameters('AVDStartCounter')), parameters('vmInitialNumber'))))]",
         "properties": {
             "description": "Association of data collection rule. Deleting this association will break the data collection for this virtual machine.",
             "dataCollectionRuleId": "[parameters('dataCollectionRuleId')]"
