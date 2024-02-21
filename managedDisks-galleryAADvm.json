@@ -939,7 +939,7 @@
             "password": "[parameters('administratorAccountPassword')]"
           }
         }
-      },
+      },/*
       {
         "condition": "[not(empty(parameters('customConfigurationScriptUrl')))]",
         "apiVersion": "2021-03-01",
@@ -964,7 +964,7 @@
             "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File {0}', variables('powerShellScriptName'))]"
         }
         }
-      },
+      },*/
       {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-11-01",
