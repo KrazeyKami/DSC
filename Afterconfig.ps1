@@ -232,3 +232,4 @@ foreach ($Bloat in $Bloatware) {
 	get-appxpackage -AllUsers *Microsoft.ZuneVideo* | Remove-AppxPackage -AllUsers
 	get-appxpackage -AllUsers *MicrosoftCorporationII.QuickAssist* | Remove-AppxPackage -AllUsers
 
+"$(get-date) - $env:computername Finished Afterconfig..." | out-file c:\temp\AVDSettings.txt -Append
