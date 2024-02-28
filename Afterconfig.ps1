@@ -67,7 +67,7 @@ $result6 = New-Item -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run -F
 $result6.Handle.Close()						
 
 # Removes Task View from the Taskbar
-New-itemproperty -Path HKLM:\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowTaskViewButton -Value "0" -PropertyType Dword -force
+New-itemproperty -Path HKLM:\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name ShowTaskViewButton -Value "0" -PropertyType Dword -force | out-file c:\temp\AVDSettings.txt -Append
 
 # Removes Widgets from the Taskbar
 New-itemproperty -Path HKLM:\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name TaskbarDa -Value "0" -PropertyType Dword -force
