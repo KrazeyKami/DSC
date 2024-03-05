@@ -776,8 +776,7 @@
       "location": "[resourceGroup().location]",
       "dependsOn": [       
           "rdsh-dsc-loop",
-          "rdsh-aad-join-loop",
-          "rdsh-domain-join-loop"],
+          "rdsh-aad-join-loop"],
       "copy": {
           "name": "AMA-install-loop",
           "count": "[parameters('rdshNumberOfInstances')]"
