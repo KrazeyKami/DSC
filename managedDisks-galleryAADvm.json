@@ -2,12 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-
     "avd_workbook_name": {
             "defaultValue": "10a032a6-8265-4315-8190-63ee503646ce", // "[newGuid()]",
             "type": "String"
     },
-
     "AVDStartCounter":{
         "defaultValue": 1,
         "type": "int",
@@ -22,13 +20,14 @@
             "description": "The datacollection rule ID for Azure VM Insights."
         }
     },
-	  "credentials_hybridAdmin": {
-        "defaultValue": "",
-        "type": "securestring",
-        "metadata": {
-            "description": "The password used to get the Hybrid Storage Account keys for FSLogix in Azure."
-        }
-      },
+    "SPCert": {
+            "defaultValue": "SPCert",
+            "type": "string",
+            "metadata": {
+            "description": "Specifies the secretname of the KeyVault item that holds the CA Cert password"
+            }
+        },
+
       "credentials_AzureSP": {
         "defaultValue": "",
         "type": "securestring",
@@ -36,7 +35,7 @@
             "description": "The password used for the Azure SP Certificate passphrase."
         }
       },
-       "DebugAADConfig": {
+       "DebugDSCDeployment": {
             "defaultValue": false,
             "type": "Bool",
             "metadata": {
@@ -56,14 +55,7 @@
         "metadata": {
             "description": "The name of the Azure Keyvault."
         }
-      },
-      "credentials_HybridAdminAccount_Username": {
-        "defaultValue": "",
-        "type": "string",
-        "metadata": {
-            "description": "The accountname used to get the Hybrid Storage Account keys for FSLogix in Azure."
-        }
-      },
+      },      
 	  "SubscriptionID": {
 	    "defaultValue": "",
         "type": "string",
@@ -106,7 +98,7 @@
           "description": "The TenantID for the Service Principal (when using a SP to connect to Azure)."
         }
       }, 
-      "SPSubscription": {
+      "Subscription": {
 	    "defaultValue": "",
         "type": "string",
         "metadata": {
@@ -142,26 +134,21 @@
             "defaultValue": "",
             "type": "securestring"
      },  
-	  "SGAVDHostpoolDAG": {
+	  "AVDHostpoolUsers": {
             "type": "String",
              "metadata": {
                 "description": "The security group name for AVD hostpool user access assignment."
             },
-            "defaultValue": "SG-AVD-Hostpool-DAG"
+            "defaultValue": "SG-AVD-Hostpool-Users"
         }, 	  
-	  "SGAVDHostpoolAdmins": {
+	  "AVDHostpoolAdmins": {
             "type": "String",
             "defaultValue": "SG-AVD-Hostpool-Admins",
             "metadata": {
                 "description": "The security group name for AVD hostpool VM Administrator access assignment."
             }
         },		
-     "artifactsFile": {
-        "type": "string",
-        "metadata": {
-          "description": "The name of the artifact required by this template's DSC extension."
-        }
-      },
+     
         "nestedTemplatesLocation": {
             "defaultValue": "",
             "type": "string",
@@ -284,18 +271,6 @@
         },
         "defaultValue": false
       },
-      "administratorAccountUsername": {
-        "type": "string",
-        "metadata": {
-          "description": "The username for the domain admin."
-        }
-      },
-      "administratorAccountPassword": {
-        "type": "securestring",
-        "metadata": {
-          "description": "The password that corresponds to the existing domain username."
-        }
-      },
       "vmAdministratorAccountUsername": {
         "type": "string",
         "metadata": {
@@ -309,13 +284,7 @@
           "description": "The password associated with the virtual machine administrator account. The vmAdministratorAccountUsername and  vmAdministratorAccountPassword parameters must both be provided. Otherwise, domain administrator credentials provided by administratorAccountUsername and administratorAccountPassword will be used."
         },
         "defaultValue": ""
-      },
-      "vhds": {
-        "type": "string",
-        "metadata": {
-          "description": "The URL to store unmanaged disks."
-        }
-      },
+      },     
        "UseFSLogix": {
         "type": "bool",
         "metadata": {
@@ -361,14 +330,7 @@
         "metadata": {
           "description": "The unique id of the subnet for the nics."
         }
-      },
-      "rdshImageSourceId": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "Resource ID of the image."
-        }
-      },    
+      },        
       "createNetworkSecurityGroup": {
         "type": "bool",
         "metadata": {
@@ -396,14 +358,7 @@
           "description": "The tags to be assigned to the network interfaces"
         },
         "defaultValue": {}
-      },
-      "OSDiskTag": {
-        "type": "object",
-        "metadata": {
-          "description": "The tags to be assigned to the VM OS Disks"
-        },
-        "defaultValue": {}
-      },
+      },  
       "networkSecurityGroupTags": {
         "type": "object",
         "metadata": {
@@ -417,28 +372,14 @@
           "description": "The tags to be assigned to the virtual machines"
         },
         "defaultValue": {}
-      },
-      "imageTags": {
-        "type": "object",
-        "metadata": {
-          "description": "The tags to be assigned to the images"
-        },
-        "defaultValue": {}
-      },
+      },     
       "vmInitialNumber": {
         "type": "int",
         "metadata": {
           "description": "VM name prefix initial number."
         },
         "defaultValue": 0
-      },
-       "nicInitialNumber": {
-        "type": "int",
-        "metadata": {
-          "description": "NIC name prefix initial number."
-        },
-        "defaultValue": 1
-      },
+      },     
       "_guidValue": {
         "type": "string",
         "defaultValue": "[newGuid()]"
@@ -461,34 +402,20 @@
             "metadata": {
                 "description": "The name of the AppGroup to be created."
             }
-        }, 
-      "ouPath": {
-        "type": "string",
-        "metadata": {
-          "description": "OUPath for the domain join"
         },
-        "defaultValue": ""
-      },
-      "domain": {
-        "type": "string",
-        "metadata": {
-          "description": "Domain to join"
-        },
-        "defaultValue": ""
-      },
       "aadJoin": {
         "type": "bool",
         "metadata": {
           "description": "IMPORTANT: You can use this parameter for the test purpose only as AAD Join is public preview. True if AAD Join, false if AD join"
         },
-        "defaultValue": false
+        "defaultValue": true
       },
       "intune": {
         "type": "bool",
         "metadata": {
           "description": "IMPORTANT: Please don't use this parameter as intune enrollment is not supported yet. True if intune enrollment is selected.  False otherwise"
         },
-        "defaultValue": false
+        "defaultValue": true
       },
       "bootDiagnostics": {
         "type": "object",
@@ -512,14 +439,7 @@
           "description": "The ID of user assigned identity that will assigned to the VMs. This is an optional parameter."
         },
         "defaultValue": ""
-      },
-      "customConfigurationScriptUrl": {
-        "type": "string",
-        "metadata": {
-          "description": "The PowerShell script URL to be run as part of post update custom configuration"
-        },
-        "defaultValue": ""
-      },
+      },     
       "SessionHostConfigurationVersion": {
         "type": "string",
         "metadata": {
@@ -580,15 +500,13 @@
       }
     },
     "variables": {
-      "emptyArray": [],
-      "domain": "[if(equals(parameters('domain'), ''), last(split(parameters('administratorAccountUsername'), '@')), parameters('domain'))]",
+      "emptyArray": [],      
       "storageAccountType": "[parameters('rdshVMDiskType')]",
       "newNsgName": "[concat(parameters('rdshPrefix'), 'nsg-', parameters('_guidValue'))]",
       "newNsgDeploymentName": "[concat('NSG-linkedTemplate-', parameters('_guidValue'))]",
-      "nsgId": "[if(parameters('createNetworkSecurityGroup'), resourceId('Microsoft.Network/networkSecurityGroups', variables('newNsgName')), parameters('networkSecurityGroupId'))]",
-      "isVMAdminAccountCredentialsProvided": "[and(not(equals(parameters('vmAdministratorAccountUsername'), '')), not(equals(parameters('vmAdministratorAccountPassword'), '')))]",
-      "vmAdministratorUsername": "[if(variables('isVMAdminAccountCredentialsProvided'), parameters('vmAdministratorAccountUsername'), first(split(parameters('administratorAccountUsername'), '@')))]",
-      "vmAdministratorPassword": "[if(variables('isVMAdminAccountCredentialsProvided'), parameters('vmAdministratorAccountPassword'), parameters('administratorAccountPassword'))]",
+      "nsgId": "[if(parameters('createNetworkSecurityGroup'), resourceId('Microsoft.Network/networkSecurityGroups', variables('newNsgName')), parameters('networkSecurityGroupId'))]",    
+      "vmAdministratorUsername": "[parameters('vmAdministratorAccountUsername')]",
+      "vmAdministratorPassword": "[parameters('vmAdministratorAccountPassword')]",
       "vmAvailabilitySetResourceId": { "id": "[resourceId('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]" },
       "planInfoEmpty": "[or(empty(parameters('vmGalleryImageSKU')), empty(parameters('vmGalleryImagePublisher')), empty(parameters('vmGalleryImageOffer')))]",
       "marketplacePlan": {
@@ -606,8 +524,7 @@
           "[resourceID('Microsoft.ManagedIdentity/userAssignedIdentities/',parameters('userAssignedIdentity'))]": {}
         }
       },
-      "vmIdentity": "[if(not(empty(parameters('userAssignedIdentity'))), union(variables('vmIdentityTypeProperty'), variables('vmUserAssignedIdentityProperty')), variables('vmIdentityTypeProperty'))]",
-      "powerShellScriptName": "[if(empty(parameters('customConfigurationScriptUrl')), null(), last(split(parameters('customConfigurationScriptUrl'), '/')))]",
+      "vmIdentity": "[if(not(empty(parameters('userAssignedIdentity'))), union(variables('vmIdentityTypeProperty'), variables('vmUserAssignedIdentityProperty')), variables('vmIdentityTypeProperty'))]",      
       "securityProfile": {
         "uefiSettings": {
           "secureBootEnabled": "[parameters('secureBoot')]",
@@ -767,8 +684,7 @@
         },
         "dependsOn": [ "rdsh-vm-loop" ]
       },
-      {
-        "condition": "[equals(parameters('artifactsFile'), 'AADConfiguration.zip')]",
+      {       
         "apiVersion": "2021-07-01",
         "type": "Microsoft.Compute/virtualMachines/extensions",
         "name": "[concat(parameters('rdshPrefix'), add(copyindex(parameters('AVDStartCounter')), parameters('vmInitialNumber')), '/', 'AADMicrosoft.PowerShell.DSC')]",
@@ -783,18 +699,13 @@
           "type": "DSC",
           "typeHandlerVersion": "2.73",
           "autoUpgradeMinorVersion": true,
-          "settings": {/*
-            "configuration": {
-                        "url": "[concat(parameters('nestedTemplatesLocation'), parameters('artifactsFile'))]",
-                        "script": "Configuration.PS1",
-                        "function": "AddSessionHost"},
-            //"SasToken" : "[parameters('SASToken')]",*/
+          "settings": {
             "modulesUrl": "[parameters('artifactsLocation')]",
             "configurationFunction": "Configuration.ps1\\AddSessionHost",
             "properties": {
               "vmAdministratorAccountUsername" : "[parameters('vmAdministratorAccountUsername')]",
               "UseDefaultConfig" : "[parameters('UseDefaultConfig')]",
-              "DebugAADConfig" : "[parameters('DebugAADConfig')]",
+              "DebugDSCDeployment" : "[parameters('DebugDSCDeployment')]",
               "UseFSLogix" : "[parameters('UseFSLogix')]",
               "DisableFSLogix" : "[parameters('DisableFSLogix')]",
               "UseProxy" : "[parameters('UseProxy')]",
@@ -810,23 +721,18 @@
               "SPCertificateThumbprint" : "[parameters('SPCertificateThumbprint')]",
               "SPApplicationID" : "[parameters('SPApplicationID')]",
               "SPTenantID" : "[parameters('SPTenantID')]",
-              "SPSubscription" : "[parameters('SPSubscription')]",
+              "Subscription" : "[parameters('Subscription')]",
               "FriendlyVDI" : "[parameters('FriendlyVDI')]",
               "FirstAVDHost" : "[concat(parameters('rdshPrefix'), parameters('AVDStartCounter'))]",
-              "SGAVDHostpoolDAG" : "[parameters('SGAVDHostpoolDAG')]",	
-              "SGAVDHostpoolAdmins" : "[parameters('SGAVDHostpoolAdmins')]",	
+              "AVDHostpoolUsers" : "[parameters('AVDHostpoolUsers')]",	
+              "AVDHostpoolAdmins" : "[parameters('AVDHostpoolAdmins')]",	
               "SubscriptionId"  : "[parameters('SubscriptionID')]",	
               "ResourceGroupNameAVD" : "[parameters('ResourceGroupNameAVD')]",		
               "StorageAccountName" :  "[parameters('StorageAccountName')]",	
               "HostPoolName" : "[parameters('hostpoolName')]", 
-              "AppGroupName": "[parameters('appGroupName')]", 	
-              "hybridAdminCreds": 
-              {
-                "UserName": "[parameters('credentials_HybridAdminAccount_Username')]",
-                "Password": "PrivateSettingsRef:HybridAdminPassword"
-              },
+              "AppGroupName": "[parameters('appGroupName')]",
               "AzureSPCertCreds": {
-                "UserName": "[parameters('credentials_HybridAdminAccount_Username')]",
+                "UserName": "[parameters('SPCert')]",
                 "Password": "PrivateSettingsRef:AzureSPCertPassword"
               },
               "registrationInfoToken": "[parameters('hostpoolToken')]",
@@ -837,47 +743,13 @@
               "sessionHostConfigurationLastUpdateTime": "[parameters('SessionHostConfigurationVersion')]"
             }
 			  },
-			  "protectedSettings": {  
-          //"configurationUrlSasToken": "[parameters('SASToken')]",
-
-					"Items": {
-					  "HybridAdminPassword": "[parameters('credentials_hybridAdmin')]",
+			  "protectedSettings": { 
+					"Items": {					 
             "AzureSPCertPassword": "[parameters('credentials_AzureSP')]"  }
 					}
 				}  
         
-      },     
-      {
-        "condition": "[not(equals(parameters('artifactsFile'), 'AADConfiguration.zip'))]",
-        "apiVersion": "2021-07-01",
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(parameters('rdshPrefix'), add(copyindex(parameters('AVDStartCounter')), parameters('vmInitialNumber')), '/', 'DefaultMicrosoft.PowerShell.DSC')]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [ "rdsh-guest-attestation-loop" ],
-        "copy": {
-          "name": "rdsh-dsc-loop",
-          "count": "[parameters('rdshNumberOfInstances')]"
-        },
-        "properties": {
-          "publisher": "Microsoft.Powershell",
-          "type": "DSC",
-          "typeHandlerVersion": "2.73",
-          "autoUpgradeMinorVersion": true,
-           "settings": {
-            "modulesUrl": "[parameters('artifactsLocation')]",
-            "configurationFunction": "Configuration.ps1\\AddSessionHost",
-            "properties": {
-              "hostPoolName": "[parameters('hostpoolName')]",
-              "registrationInfoToken": "[parameters('hostpoolToken')]",
-              "aadJoin": "[parameters('aadJoin')]",
-              "UseAgentDownloadEndpoint": true,
-              "aadJoinPreview": "[and(contains(parameters('systemData'), 'aadJoinPreview'), parameters('systemData').aadJoinPreview)]",
-              "mdmId": "[if(parameters('intune'), '0000000a-0000-0000-c000-000000000000', '')]",
-              "sessionHostConfigurationLastUpdateTime": "[parameters('SessionHostConfigurationVersion')]"
-            }			 
-				  } 
-        }        
-      },
+      }, 
       {
         "condition": "[and(parameters('aadJoin'), if(contains(parameters('systemData'), 'aadJoinPreview'), not(parameters('systemData').aadJoinPreview), bool('true')))]",
         "apiVersion": "2021-07-01",
@@ -896,35 +768,7 @@
           "autoUpgradeMinorVersion": true,
           "settings": "[if(parameters('intune'), createObject('mdmId','0000000a-0000-0000-c000-000000000000'), json('null'))]"
         }
-      },
-      {
-        "condition": "[not(parameters('aadJoin'))]",
-        "apiVersion": "2021-07-01",
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(parameters('rdshPrefix'), add(copyindex(parameters('AVDStartCounter')), parameters('vmInitialNumber')), '/', 'joindomain')]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [ "rdsh-dsc-loop" ],
-        "copy": {
-          "name": "rdsh-domain-join-loop",
-          "count": "[parameters('rdshNumberOfInstances')]"
-        },
-        "properties": {
-          "publisher": "Microsoft.Compute",
-          "type": "JsonADDomainExtension",
-          "typeHandlerVersion": "1.3",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "name": "[variables('domain')]",
-            "ouPath": "[parameters('ouPath')]",
-            "user": "[parameters('administratorAccountUsername')]",
-            "restart": "true",
-            "options": "3"
-          },
-          "protectedSettings": {
-            "password": "[parameters('administratorAccountPassword')]"
-          }
-        }
-      },
+      },      
       {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-11-01",
