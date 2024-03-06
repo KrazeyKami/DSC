@@ -796,7 +796,8 @@
           "autoUpgradeMinorVersion": true,
           "enableAutomaticUpgrade": true
         }
-      },
+      }/*,
+      
       {
             
         "type": "Microsoft.Insights/dataCollectionRuleAssociations",
@@ -813,7 +814,7 @@
         },
         "dependsOn": [
           "AMA-install-loop"]            
-      }
+      }*/
     ],
     "outputs": {}
   }
