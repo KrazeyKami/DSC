@@ -14,7 +14,7 @@
         }
       },
     "dataCollectionRuleId": {
-        "defaultValue":  "[concat('/subscriptions/',parameters('subscriptionId'), '/resourceGroups/', parameters('ResourceGroupNameAVD'), '/providers/Microsoft.Insights/datacollectionrules/', parameters('avd_workbook_name'),'-dcr')]",
+        "defaultValue":  "[concat('/subscriptions/',parameters('subscriptionId'), '/resourceGroups/', parameters('ResourceGroupNameAVD'), '/providers/Microsoft.Insights/datacollectionrules/', 'microsoft-avd-workbook-dcr')]",
         "type": "string",
         "metadata": {
             "description": "The datacollection rule ID for Azure VM Insights."
