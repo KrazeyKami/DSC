@@ -42,6 +42,13 @@
                 "description": "If true, log files created in Temp directory and imported PFX for Automation remain present."
             }
         },  
+         "Tools": {
+            "defaultValue": false,
+            "type": "Bool",
+            "metadata": {
+                "description": "If true, tools are left present after cleanup."
+            }
+        }, 
       "UseDefaultConfig": {
             "defaultValue": false,
             "type": "Bool",
@@ -706,6 +713,7 @@
               "vmAdministratorAccountUsername" : "[parameters('vmAdministratorAccountUsername')]",
               "UseDefaultConfig" : "[parameters('UseDefaultConfig')]",
               "DebugDSCDeployment" : "[parameters('DebugDSCDeployment')]",
+              "Tools" : "[parameters('Tools')]",
               "UseFSLogix" : "[parameters('UseFSLogix')]",
               "DisableFSLogix" : "[parameters('DisableFSLogix')]",
               "UseProxy" : "[parameters('UseProxy')]",
