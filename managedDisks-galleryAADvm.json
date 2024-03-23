@@ -796,7 +796,7 @@
           "autoUpgradeMinorVersion": true,
           "enableAutomaticUpgrade": true
         }
-      },      
+      }/*,      
       {            
         "type": "Microsoft.Insights/dataCollectionRuleAssociations",
         "apiVersion": "2021-09-01-preview",
@@ -812,7 +812,7 @@
         },
         "dependsOn": [
           "AMA-install-loop"]            
-      }
+      }*/
     ],
     "outputs": {}
   }
