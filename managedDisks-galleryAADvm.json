@@ -716,8 +716,7 @@
           "settings": {
             "modulesUrl": "[parameters('artifactsLocation')]",
             "configurationFunction": "Configuration.ps1\\AddSessionHost",
-            "properties": {
-              "vmAdministratorAccountUsername" : "[parameters('vmAdministratorAccountUsername')]",
+            "properties": {             
               "UseDefaultConfig" : "[parameters('UseDefaultConfig')]",
               "DebugDSCDeployment" : "[parameters('DebugDSCDeployment')]",
               "Tools" : "[parameters('Tools')]",
