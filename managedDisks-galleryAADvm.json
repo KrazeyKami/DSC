@@ -34,7 +34,7 @@
         "metadata": {
             "description": "The password used for the Azure SP Certificate passphrase."
         }
-      },
+      },      
        "DebugDSCDeployment": {
             "defaultValue": false,
             "type": "Bool",
@@ -751,6 +751,10 @@
                 "UserName": "[parameters('SPCert')]",
                 "Password": "PrivateSettingsRef:AzureSPCertPassword"
               },
+              "localAdminCreds": {
+                "UserName": "[parameters('vmAdministratorAccountUsername')]",
+                "Password": "PrivateSettingsRef:LocalAdminPassword"
+              },
               "registrationInfoToken": "[parameters('hostpoolToken')]",
               "aadJoin": "[parameters('aadJoin')]",
               "UseAgentDownloadEndpoint": true,
@@ -761,7 +765,8 @@
 			  },
 			  "protectedSettings": { 
 					"Items": {					 
-            "AzureSPCertPassword": "[parameters('credentials_AzureSP')]"  }
+            "AzureSPCertPassword": "[parameters('credentials_AzureSP')]",
+            "LocalAdminPassword": "[parameters('vmAdministratorAccountPassword')]"  }
 					}
 				}  
         
