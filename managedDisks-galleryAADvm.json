@@ -13,6 +13,13 @@
             "description": "This is the first AVD count suffix (e.g. '1' means start at AVDHOST-1, '10' means start at AVDHOST-10, etc)."
         }
       },
+    "CreateDCR": {
+          "defaultValue": false,
+          "type": "bool",
+          "metadata": {
+          "description": "Set this bool if you want to create a Data Collection Rule."
+          }
+      },
     "dataCollectionRuleId": {
         "defaultValue":  "[concat('/subscriptions/',parameters('subscriptionId'), '/resourceGroups/', parameters('ResourceGroupNameAVD'), '/providers/Microsoft.Insights/datacollectionrules/', 'microsoft-avd-workbook-dcr')]",
         "type": "string",
@@ -816,8 +823,9 @@
           "autoUpgradeMinorVersion": true,
           "enableAutomaticUpgrade": true
         }
-      }/*,      
+      },      
       {            
+        "condition": "[parameters('CreateDCR')]",
         "type": "Microsoft.Insights/dataCollectionRuleAssociations",
         "apiVersion": "2021-09-01-preview",
         "name": "AzureMonitorDataCollectionRuleAssociations",
@@ -832,7 +840,7 @@
         },
         "dependsOn": [
           "AMA-install-loop"]            
-      }*/
+      }
     ],
     "outputs": {}
   }
