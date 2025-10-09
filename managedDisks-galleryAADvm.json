@@ -137,7 +137,7 @@
 			"defaultValue": "",
         "type": "string",
         "metadata": {
-          "description": "The ResourceGroupName where the Storage Account is located."
+          "description": "The ResourceGroupName where the AVD resources are located."
         }
 	  },
 	  "StorageAccountName": {
@@ -147,6 +147,13 @@
             },
             "defaultValue": ""
       },
+    "ResourceGroupNameSA": {
+			"defaultValue": "",
+        "type": "string",
+        "metadata": {
+          "description": "The ResourceGroupName where the Storage Account is located."
+        }
+	  },
 	  "dscsaname": {
             "defaultValue": "",
             "type": "String"
@@ -737,7 +744,7 @@
               "dscsaname" : "[parameters('dscsaname')]",
               "SASToken" : "[parameters('SASToken')]",
               "SPUseCertAuth" : "[parameters('SPUseCertAuth')]",
-              "userAssignedIdentityID":"[parameters('userAssignedIdentityID')]", 
+              "userAssignedIdentityID":"[parameters('userAssignedIdentityID')]",              		 
               "KVName" : "[parameters('KVName')]",
               "SPCertificateName" : "[parameters('SPCertificateName')]",
               "SPCertificateThumbprint" : "[parameters('SPCertificateThumbprint')]",
@@ -749,7 +756,8 @@
               "AVDHostpoolUsers" : "[parameters('AVDHostpoolUsers')]",	
               "AVDHostpoolAdmins" : "[parameters('AVDHostpoolAdmins')]",	
               "SubscriptionId"  : "[parameters('SubscriptionID')]",	
-              "ResourceGroupNameAVD" : "[parameters('ResourceGroupNameAVD')]",		
+              "ResourceGroupNameAVD" : "[parameters('ResourceGroupNameAVD')]",
+              "ResourceGroupNameSA" : "[parameters('ResourceGroupNameSA')]",		
               "StorageAccountName" :  "[parameters('StorageAccountName')]",	
               "HostPoolName" : "[parameters('hostpoolName')]", 
               "AppGroupName": "[parameters('appGroupName')]",
