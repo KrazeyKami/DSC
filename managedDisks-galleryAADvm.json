@@ -1,11 +1,7 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-    //"avd_workbook_name": {
-    //        "defaultValue": "10a032a6-8265-4315-8190-63ee503646ce", // "[newGuid()]",
-    //        "type": "String"
-    //},
+    "parameters": {   
     "AVDStartCounter":{
         "defaultValue": 1,
         "type": "int",
