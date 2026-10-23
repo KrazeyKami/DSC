@@ -26,8 +26,8 @@ Map met uitsluitend Autopilot-import-CSV's. Samenvoegen vereist geen administrat
 .EXAMPLE
 .\Export-AutopilotImport.ps1
 .EXAMPLE
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Export-AutopilotImport.ps1 -GroupTag 'WIN-PILOT' -OutputFile 'E:\Autopilot\LAPTOP01.csv'
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Export-AutopilotImport.ps1 -GroupTag 'WIN-STD' -OutputFile 'E:\Autopilot\LAPTOP01.csv'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Export-AutopilotImport.ps1 -GroupTag 'WIN-PILOT' -OutputFile 'C:\Autopilot\LAPTOP01.csv'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Export-AutopilotImport.ps1 -GroupTag 'WIN-STD' -OutputFile 'C:\Autopilot\LAPTOP01.csv'
 .EXAMPLE
 .\Export-AutopilotImport.ps1 -MergeFolder 'C:\Autopilot\Verzameld' -OutputFile 'C:\Autopilot\Import.csv'
 .NOTES
